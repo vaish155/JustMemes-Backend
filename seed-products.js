@@ -10,7 +10,7 @@ const products = [
     price: 899,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 25,
-    size: 'm'
+    size: ['xs', 's', 'm', 'l', 'xl']
   },
   {
     name: 'The "Blank Canvas" Tee',
@@ -18,7 +18,7 @@ const products = [
     price: 899,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 18,
-    size: 'l'
+    size: ['s', 'm', 'l', 'xl']
   },
   {
     name: 'The "Low Battery" Tee',
@@ -26,7 +26,7 @@ const products = [
     price: 999,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 12,
-    size: 'xl'
+    size: ['m', 'l', 'xl']
   },
   {
     name: 'The "Campus Legend" Tee',
@@ -34,7 +34,7 @@ const products = [
     price: 949,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 20,
-    size: 's'
+    size: ['xs', 's', 'm']
   },
   {
     name: 'The "No Sleep" Hoodie',
@@ -42,7 +42,7 @@ const products = [
     price: 1299,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 10,
-    size: 'm'
+    size: ['s', 'm', 'l', 'xl']
   },
   {
     name: 'The "Late Submit" Tee',
@@ -50,7 +50,7 @@ const products = [
     price: 799,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 30,
-    size: 'xs'
+    size: ['xs', 's', 'm']
   },
   {
     name: 'The "Main Character" Tee',
@@ -58,7 +58,7 @@ const products = [
     price: 949,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 16,
-    size: 'l'
+    size: ['m', 'l', 'xl']
   },
   {
     name: 'The "Hot Girl Summer" Tee',
@@ -66,7 +66,7 @@ const products = [
     price: 899,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 14,
-    size: 'm'
+    size: ['xs', 's', 'm', 'l']
   },
   {
     name: 'The "Weekend Mode" Tee',
@@ -74,7 +74,7 @@ const products = [
     price: 849,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 22,
-    size: 's'
+    size: ['xs', 's', 'm', 'l', 'xl']
   },
   {
     name: 'The "Vibe Check" Tee',
@@ -82,7 +82,7 @@ const products = [
     price: 899,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 17,
-    size: 'xl'
+    size: ['s', 'm', 'l', 'xl']
   }
 ];
 
@@ -92,7 +92,14 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   imageUrl: { type: String, default: '' },
   stock: { type: Number, default: 0 },
-  size: { type: String, enum: ['xs', 's', 'm', 'l', 'xl'], required: true },
+  size: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: (value) => value.every((entry) => ['xs', 's', 'm', 'l', 'xl'].includes(entry)),
+      message: 'Each size must be one of xs, s, m, l, xl.'
+    }
+  },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 

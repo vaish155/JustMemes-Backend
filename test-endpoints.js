@@ -36,7 +36,7 @@ async function runTests() {
   const server = startServer();
 
   await new Promise((resolve, reject) => {
-    server.once('listening', resolve);
+    server.once('ready', resolve);
     server.once('error', reject);
   });
 
@@ -84,12 +84,14 @@ async function runTests() {
           price: 349,
           imageUrl: 'https://example.com/test-tee.jpg',
           stock: 10,
-          size: 'm'
+          size: ['xs', 's', 'm', 'l', 'xl']
         })
       });
 
       assertCondition(response.status === 201, `Expected 201 but received ${response.status}`);
       assertCondition(response.data && response.data.id, 'Expected created product to include an id');
+      assertCondition(Array.isArray(response.data.size), 'Expected created product to include an array of available sizes');
+      assertCondition(response.data.size.includes('m'), 'Expected created product to include the size m');
       createdProduct = response.data;
     });
 
@@ -118,12 +120,13 @@ async function runTests() {
           address: 'Hostel Block A',
           roomNumber: '101',
           hostelName: 'Sunrise Hostel',
-          items: [{ productId: createdProduct.id, quantity: 1, size: createdProduct.size }]
+          items: [{ productId: createdProduct.id, quantity: 1, size: 'm' }]
         })
       });
 
       assertCondition(response.status === 201, `Expected 201 but received ${response.status}`);
       assertCondition(response.data && response.data.success === true, 'Expected checkout to succeed');
+      assertCondition(response.data.order && response.data.order.items?.[0]?.size === 'm', 'Expected checkout to store the selected size');
       createdOrder = response.data.order;
     });
 

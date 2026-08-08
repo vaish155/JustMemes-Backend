@@ -22,6 +22,8 @@ app.use(express.json());
 // -----------------------------
 // 2. MongoDB schemas
 // -----------------------------
+const availableSizes = ['xs', 's', 'm', 'l', 'xl'];
+
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -29,7 +31,14 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     imageUrl: { type: String, default: '' },
     stock: { type: Number, default: 0 },
-    size: { type: String, enum: ['xs', 's', 'm', 'l', 'xl'], required: true },
+    size: {
+      type: [String],
+      required: true,
+      validate: {
+        validator: (value) => value.every((entry) => availableSizes.includes(entry)),
+        message: 'Each size must be one of xs, s, m, l, xl.'
+      }
+    },
     createdAt: { type: Date, default: Date.now }
   },
   { timestamps: true }
@@ -65,50 +74,19 @@ const orderSchema = new mongoose.Schema(
 );
 
 // -----------------------------
-// 3. Runtime state and fallback storage
+// 3. Runtime state and storage
 // -----------------------------
 let ProductModel;
 let OrderModel;
-let inMemoryProducts = [];
 let inMemoryOrders = [];
-let productCounter = 1;
 let orderCounter = 1;
-
-// Seed a few sample products so the API works immediately without MongoDB.
-const seedProducts = () => {
-  if (inMemoryProducts.length > 0) {
-    return;
-  }
-
-  inMemoryProducts = [
-    {
-      id: 'prod_1',
-      name: 'Classic Tee',
-      description: 'Soft cotton tee for everyday wear',
-      price: 499,
-      imageUrl: 'https://images.example.com/tee.jpg',
-      stock: 25,
-      size: 'm'
-    },
-    {
-      id: 'prod_2',
-      name: 'Campus Hoodie',
-      description: 'Warm hoodie for hostel mornings',
-      price: 999,
-      imageUrl: 'https://images.example.com/hoodie.jpg',
-      stock: 15,
-      size: 'l'
-    }
-  ];
-};
 
 // -----------------------------
 // 4. Database connection helpers
 // -----------------------------
 async function connectToDatabase() {
   if (!useMongo) {
-    seedProducts();
-    console.log('No MONGODB_URI provided. Using in-memory storage.');
+    console.error('MONGODB_URI is not set. Product routes require a database connection.');
     return false;
   }
 
@@ -119,10 +97,9 @@ async function connectToDatabase() {
     console.log('MongoDB connected');
     return true;
   } catch (error) {
-    console.error('MongoDB connection failed, falling back to in-memory storage:', error.message);
+    console.error('MongoDB connection failed:', error.message);
     ProductModel = null;
     OrderModel = null;
-    seedProducts();
     return false;
   }
 }
@@ -138,7 +115,7 @@ function sanitizeProduct(product) {
     price: product.price,
     imageUrl: product.imageUrl,
     stock: product.stock,
-    size: product.size,
+    size: Array.isArray(product.size) ? product.size : [product.size].filter(Boolean),
     createdAt: product.createdAt
   };
 }
@@ -168,70 +145,70 @@ function sanitizeOrder(order) {
 // 6. Product helper functions
 // -----------------------------
 async function listProducts() {
-  // Returns all products from MongoDB or the in-memory fallback.
-  if (ProductModel) {
-    const products = await ProductModel.find({}).sort({ createdAt: -1 }).lean();
-    return products.map(sanitizeProduct);
+  if (!ProductModel) {
+    throw new Error('Product store is not available. Please ensure MongoDB is connected.');
   }
 
-  return inMemoryProducts.map(sanitizeProduct);
+  const products = await ProductModel.find({}).sort({ createdAt: -1 }).lean();
+  return products.map(sanitizeProduct);
+}
+
+function normalizeProductSize(size) {
+  if (Array.isArray(size)) {
+    return size.filter(Boolean);
+  }
+
+  if (typeof size === 'string' && size) {
+    return [size];
+  }
+
+  return [];
 }
 
 async function createProduct(data) {
-  // Creates a product and stores it in MongoDB or in-memory storage.
-  if (ProductModel) {
-    const created = await ProductModel.create({ ...data });
-    return sanitizeProduct(created.toObject());
+  if (!ProductModel) {
+    throw new Error('Product store is not available. Please ensure MongoDB is connected.');
   }
 
-  const product = {
-    id: `prod_${productCounter++}`,
-    ...data
+  const payload = {
+    ...data,
+    size: normalizeProductSize(data.size)
   };
-  inMemoryProducts.push(product);
-  return sanitizeProduct(product);
+
+  const created = await ProductModel.create(payload);
+  return sanitizeProduct(created.toObject());
 }
 
 async function getProductById(id) {
-  // Finds a single product by its id.
-  if (ProductModel) {
-    const product = await ProductModel.findOne({ _id: id }).lean();
-    return product ? sanitizeProduct(product) : null;
+  if (!ProductModel) {
+    throw new Error('Product store is not available. Please ensure MongoDB is connected.');
   }
 
-  return inMemoryProducts.find((product) => product.id === id) || null;
+  const product = await ProductModel.findOne({ _id: id }).lean();
+  return product ? sanitizeProduct(product) : null;
 }
 
 async function updateProduct(id, data) {
-  // Updates an existing product.
-  if (ProductModel) {
-    const product = await ProductModel.findByIdAndUpdate(id, data, { new: true }).lean();
-    return product ? sanitizeProduct(product) : null;
+  if (!ProductModel) {
+    throw new Error('Product store is not available. Please ensure MongoDB is connected.');
   }
 
-  const index = inMemoryProducts.findIndex((product) => product.id === id);
-  if (index === -1) {
-    return null;
-  }
+  const payload = {
+    ...data,
+    size: data.size !== undefined ? normalizeProductSize(data.size) : undefined
+  };
 
-  inMemoryProducts[index] = { ...inMemoryProducts[index], ...data };
-  return sanitizeProduct(inMemoryProducts[index]);
+  const product = await ProductModel.findByIdAndUpdate(id, payload, { new: true }).lean();
+  return product ? sanitizeProduct(product) : null;
 }
 
 async function deleteProduct(id) {
-  // Removes a product by id.
-  if (ProductModel) {
-    const product = await ProductModel.findByIdAndDelete(id).lean();
-    return Boolean(product);
+  if (!ProductModel) {
+    throw new Error('Product store is not available. Please ensure MongoDB is connected.');
   }
 
-  const index = inMemoryProducts.findIndex((product) => product.id === id);
-  if (index === -1) {
-    return false;
-  }
-
-  inMemoryProducts.splice(index, 1);
-  return true;
+  const product = await ProductModel.findByIdAndDelete(id).lean();
+  return Boolean(product);
 }
 
 // -----------------------------
@@ -423,11 +400,18 @@ app.post('/checkout', async (req, res) => {
       if (product.stock < item.quantity) {
         return res.status(400).json({ error: `Insufficient stock for ${product.name}` });
       }
+
+      const selectedSize = item.size;
+      const availableSizes = Array.isArray(product.size) ? product.size : [product.size].filter(Boolean);
+      if (!selectedSize || !availableSizes.includes(selectedSize)) {
+        return res.status(400).json({ error: `Selected size ${selectedSize || 'none'} is not available for ${product.name}` });
+      }
+
       subtotal += product.price * item.quantity;
       productDetails.push({
         productId: product.id,
         productName: product.name,
-        size: item.size || product.size,
+        size: selectedSize,
         quantity: item.quantity,
         price: product.price
       });
@@ -527,10 +511,13 @@ app.post('/payments/verify', async (req, res) => {
 // 10. Server startup
 // -----------------------------
 function startServer() {
-  return app.listen(port, host, async () => {
+  const server = app.listen(port, host, async () => {
     await connectToDatabase();
+    server.emit('ready');
     console.log(`Server running on http://${host}:${port}`);
   });
+
+  return server;
 }
 
 if (require.main === module) {
