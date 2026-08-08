@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const availableSizes = ['xs', 's', 'm', 'l', 'xl'];
+
 const products = [
   {
     name: 'The "Three Apples" Tee',
@@ -96,14 +98,86 @@ const productSchema = new mongoose.Schema({
     type: [String],
     required: true,
     validate: {
-      validator: (value) => value.every((entry) => ['xs', 's', 'm', 'l', 'xl'].includes(entry)),
+      validator: (value) => value.every((entry) => availableSizes.includes(entry)),
       message: 'Each size must be one of xs, s, m, l, xl.'
     }
   },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
+const orderSchema = new mongoose.Schema({
+  customerName: { type: String, required: true },
+  contact: { type: String, required: true },
+  email: { type: String, required: true },
+  address: { type: String, required: true },
+  roomNumber: { type: String, required: true },
+  hostelName: { type: String, required: true },
+  items: [
+    {
+      productId: { type: String, required: true },
+      productName: { type: String, required: true },
+      size: { type: String, required: true },
+      quantity: { type: Number, required: true },
+      price: { type: Number, required: true }
+    }
+  ],
+  subtotal: { type: Number, required: true },
+  total: { type: Number, required: true },
+  paymentStatus: { type: String, default: 'pending' },
+  orderStatus: { type: String, default: 'placed' },
+  razorpayOrderId: { type: String, default: '' },
+  razorpayPaymentId: { type: String, default: '' },
+  razorpaySignature: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now }
+}, { timestamps: true });
+
 const Product = mongoose.model('Product', productSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+const orders = [
+  {
+    customerName: 'Aarav Sharma',
+    contact: '9876543210',
+    email: 'aarav@example.com',
+    address: 'Hostel Block A',
+    roomNumber: '101',
+    hostelName: 'Sunrise Hostel',
+    items: [
+      {
+        productId: 'placeholder-product-id',
+        productName: 'The "Three Apples" Tee',
+        size: 'm',
+        quantity: 1,
+        price: 899
+      }
+    ],
+    subtotal: 899,
+    total: 899,
+    paymentStatus: 'paid',
+    orderStatus: 'delivered'
+  },
+  {
+    customerName: 'Mira Patel',
+    contact: '9123456780',
+    email: 'mira@example.com',
+    address: 'Hostel Block B',
+    roomNumber: '205',
+    hostelName: 'Moonlight Hostel',
+    items: [
+      {
+        productId: 'placeholder-product-id',
+        productName: 'The "Blank Canvas" Tee',
+        size: 'l',
+        quantity: 2,
+        price: 899
+      }
+    ],
+    subtotal: 1798,
+    total: 1798,
+    paymentStatus: 'pending',
+    orderStatus: 'placed'
+  }
+];
 
 async function seedProducts() {
   if (!process.env.MONGODB_URI) {
@@ -116,9 +190,20 @@ async function seedProducts() {
     console.log('Connected to MongoDB');
 
     await Product.deleteMany({});
-    const inserted = await Product.insertMany(products);
+    await Order.deleteMany({});
 
-    console.log(`Seeded ${inserted.length} products successfully.`);
+    const insertedProducts = await Product.insertMany(products);
+    const seededOrders = orders.map((order, index) => ({
+      ...order,
+      items: order.items.map((item) => ({
+        ...item,
+        productId: insertedProducts[index % insertedProducts.length]._id.toString()
+      }))
+    }));
+
+    const insertedOrders = await Order.insertMany(seededOrders);
+
+    console.log(`Seeded ${insertedProducts.length} products and ${insertedOrders.length} orders successfully.`);
   } catch (error) {
     console.error('Seeding failed:', error.message);
   } finally {
