@@ -67,7 +67,14 @@ function sanitizeOrder(order) {
   };
 }
 
+async function ensureDbConnection() {
+  if (!getIsConnected()) {
+    await connectToDatabase();
+  }
+}
+
 async function createOrder(data) {
+  await ensureDbConnection();
   if (getIsConnected() && OrderModel) {
     const created = await OrderModel.create(data);
     return sanitizeOrder(created.toObject());
@@ -85,6 +92,7 @@ async function createOrder(data) {
 }
 
 async function listOrders() {
+  await ensureDbConnection();
   if (getIsConnected() && OrderModel) {
     const orders = await OrderModel.find({}).sort({ createdAt: -1 }).lean();
     return orders.map(sanitizeOrder);
@@ -93,6 +101,7 @@ async function listOrders() {
 }
 
 async function getOrderById(id) {
+  await ensureDbConnection();
   if (getIsConnected() && OrderModel) {
     const order = await OrderModel.findOne({ _id: id }).lean();
     return order ? sanitizeOrder(order) : null;
@@ -101,6 +110,7 @@ async function getOrderById(id) {
 }
 
 async function updateOrder(id, updates) {
+  await ensureDbConnection();
   if (getIsConnected() && OrderModel) {
     const order = await OrderModel.findByIdAndUpdate(id, updates, { new: true }).lean();
     return order ? sanitizeOrder(order) : null;

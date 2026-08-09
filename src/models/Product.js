@@ -56,7 +56,16 @@ function normalizeProductSize(size) {
   return [];
 }
 
+const { getIsConnected, connectToDatabase } = require('../config/db');
+
+async function ensureDbConnection() {
+  if (!getIsConnected()) {
+    await connectToDatabase();
+  }
+}
+
 async function listProducts() {
+  await ensureDbConnection();
   if (getIsConnected() && ProductModel) {
     const products = await ProductModel.find({}).sort({ createdAt: -1 }).lean();
     return products.map(sanitizeProduct);
@@ -65,6 +74,7 @@ async function listProducts() {
 }
 
 async function createProduct(data) {
+  await ensureDbConnection();
   const payload = {
     ...data,
     size: normalizeProductSize(data.size),
@@ -83,6 +93,7 @@ async function createProduct(data) {
 }
 
 async function getProductById(id) {
+  await ensureDbConnection();
   if (getIsConnected() && ProductModel) {
     const product = await ProductModel.findOne({ _id: id }).lean();
     return product ? sanitizeProduct(product) : null;
@@ -91,6 +102,7 @@ async function getProductById(id) {
 }
 
 async function updateProduct(id, data) {
+  await ensureDbConnection();
   const payload = { ...data };
   if (data.size !== undefined) {
     payload.size = normalizeProductSize(data.size);
@@ -106,6 +118,7 @@ async function updateProduct(id, data) {
 }
 
 async function deleteProduct(id) {
+  await ensureDbConnection();
   if (getIsConnected() && ProductModel) {
     const product = await ProductModel.findByIdAndDelete(id).lean();
     return Boolean(product);
