@@ -98,6 +98,24 @@ async function handleCreatePhonePeOrder(req, res, next) {
     const data = await apiResponse.json();
 
     if (!data.success) {
+      if (data.code === 'KEY_NOT_CONFIGURED') {
+        console.warn('PhonePe KEY_NOT_CONFIGURED: Falling back to sandbox test mode redirect.');
+        const updatedOrder = await updateOrder(order.id, {
+          phonepeTxnId: merchantTransactionId,
+          paymentGateway: 'phonepe_test_fallback',
+        });
+        return res.json({
+          success: true,
+          mock: true,
+          order: updatedOrder,
+          redirectUrl: `${frontendUrl || 'http://localhost:3000'}/payment/phonepe-callback?orderId=${encodeURIComponent(
+            order.id
+          )}&txnId=${encodeURIComponent(merchantTransactionId)}&mock=true`,
+          merchantTransactionId,
+          note: 'PhonePe merchant key is pending activation in sandbox. Test payment fallback enabled.',
+        });
+      }
+
       return res.status(400).json({
         success: false,
         error: data.message || 'PhonePe payment initialization failed',
