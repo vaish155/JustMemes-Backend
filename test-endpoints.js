@@ -163,6 +163,25 @@ async function runTests() {
       assertCondition(verifyResponse.data && verifyResponse.data.valid === true, 'Expected payment verification to succeed');
     });
 
+    await runTest('POST /payments/phonepe/create-order', async () => {
+      const response = await request(baseUrl, '/payments/phonepe/create-order', {
+        method: 'POST',
+        body: JSON.stringify({ orderId: createdOrder.id, amount: 50 })
+      });
+      assertCondition(response.status === 200, `Expected 200 but received ${response.status}`);
+      assertCondition(response.data && response.data.success === true, 'Expected PhonePe create-order to succeed');
+      assertCondition(response.data.redirectUrl, 'Expected response to contain redirectUrl');
+    });
+
+    await runTest('POST /payments/phonepe/verify', async () => {
+      const response = await request(baseUrl, '/payments/phonepe/verify', {
+        method: 'POST',
+        body: JSON.stringify({ orderId: createdOrder.id, isMock: true })
+      });
+      assertCondition(response.status === 200, `Expected 200 but received ${response.status}`);
+      assertCondition(response.data && response.data.valid === true, 'Expected PhonePe verify to succeed');
+    });
+
     await runTest('DELETE /products/:id', async () => {
       const response = await request(baseUrl, `/products/${createdProduct.id}`, {
         method: 'DELETE'

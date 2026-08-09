@@ -25,6 +25,9 @@ const orderSchema = new mongoose.Schema(
     razorpayOrderId: { type: String, default: '' },
     razorpayPaymentId: { type: String, default: '' },
     razorpaySignature: { type: String, default: '' },
+    phonepeTxnId: { type: String, default: '' },
+    paymentGateway: { type: String, default: '' },
+    phonepeResponseCode: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
@@ -57,6 +60,9 @@ function sanitizeOrder(order) {
     razorpayOrderId: order.razorpayOrderId,
     razorpayPaymentId: order.razorpayPaymentId,
     razorpaySignature: order.razorpaySignature,
+    phonepeTxnId: order.phonepeTxnId,
+    paymentGateway: order.paymentGateway,
+    phonepeResponseCode: order.phonepeResponseCode,
     createdAt: order.createdAt,
   };
 }
