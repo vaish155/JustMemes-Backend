@@ -2,15 +2,16 @@ const crypto = require('crypto');
 const { getOrderById, updateOrder } = require('../models/Order');
 
 // PhonePe Config
-const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || 'PGTESTPAYUAT';
-const SALT_KEY = process.env.PHONEPE_SALT_KEY || '099eb0cd-02fe-4e6e-ac09-92550c1e5f40';
+const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || 'M222AV357KIE0_2608092254';
+const SALT_KEY = process.env.PHONEPE_SALT_KEY || 'MjJkYWM2MmQtYjE2OC00OGRkLTk3YmEtMWZmZmExYjM2Y2Zh';
 const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || '1';
-const ENV = process.env.PHONEPE_ENV || 'UAT'; // 'UAT' or 'PRODUCTION'
+const ENV = process.env.PHONEPE_ENV || 'PRODUCTION'; // 'UAT' or 'PRODUCTION'
 
 const HOST_URL =
-  ENV === 'PRODUCTION'
-    ? 'https://api.phonepe.com/apis/hermes'
-    : 'https://api-preprod.phonepe.com/apis/pg-sandbox';
+  ENV === 'UAT'
+    ? 'https://api-preprod.phonepe.com/apis/pg-sandbox'
+    : 'https://api.phonepe.com/apis/hermes';
+
 
 /**
  * Generate SHA256 Checksum header required by PhonePe API (X-VERIFY)
@@ -46,8 +47,8 @@ async function handleCreatePhonePeOrder(req, res, next) {
       process.env.PHONEPE_CALLBACK_URL ||
       `https://justmemes-backend-531422631456.asia-south1.run.app/payments/phonepe/callback`;
 
-    // Check if PhonePe real credentials exist or if sandbox mock should be returned
-    const isMock = !process.env.PHONEPE_MERCHANT_ID;
+    // Check if mock mode is explicitly requested
+    const isMock = process.env.PHONEPE_MOCK === 'true';
 
     if (isMock) {
       // Mock PhonePe Response for seamless local testing
@@ -135,7 +136,7 @@ async function handleVerifyPhonePePayment(req, res, next) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    if (isMock || !process.env.PHONEPE_MERCHANT_ID) {
+    if (isMock || process.env.PHONEPE_MOCK === 'true') {
       const updatedOrder = await updateOrder(order.id, {
         paymentStatus: 'paid',
         orderStatus: 'paid',
