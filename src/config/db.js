@@ -11,7 +11,7 @@ async function connectToDatabase() {
   }
 
   try {
-    await mongoose.connect(mongoUri);
+    await mongoose.connect(mongoUri, { dbName: 'justmemes' });
     isConnected = true;
     console.log('MongoDB connected');
     return true;
