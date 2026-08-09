@@ -5,7 +5,7 @@ const { getOrderById, updateOrder } = require('../models/Order');
 const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || 'M222AV357KIE0_2608092254';
 const SALT_KEY = process.env.PHONEPE_SALT_KEY || 'MjJkYWM2MmQtYjE2OC00OGRkLTk3YmEtMWZmZmExYjM2Y2Zh';
 const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || '1';
-const ENV = process.env.PHONEPE_ENV || 'PRODUCTION'; // 'UAT' or 'PRODUCTION'
+const ENV = process.env.PHONEPE_ENV || 'UAT'; // 'UAT' or 'PRODUCTION'
 
 const HOST_URL =
   ENV === 'UAT'
