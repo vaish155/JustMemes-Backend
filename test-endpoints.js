@@ -139,33 +139,6 @@ async function runTests() {
     await runTest('POST /payments/create-order', async () => {
       const response = await request(baseUrl, '/payments/create-order', {
         method: 'POST',
-        body: JSON.stringify({ orderId: createdOrder.id, amount: 5000 })
-      });
-      assertCondition(response.status === 200, `Expected 200 but received ${response.status}`);
-      assertCondition(response.data && response.data.success === true, 'Expected payment order creation to succeed');
-      assertCondition(response.data.razorpay && response.data.razorpay.id, 'Expected Razorpay payload to contain an id');
-    });
-
-    await runTest('POST /payments/verify', async () => {
-      const verifyResponse = await request(baseUrl, '/payments/verify', {
-        method: 'POST',
-        body: JSON.stringify({
-          orderId: createdOrder.id,
-          razorpay_order_id: createdOrder.id,
-          razorpay_payment_id: 'pay_test_123',
-          razorpay_signature: crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'test_secret')
-            .update(`${createdOrder.id}|pay_test_123`)
-            .digest('hex')
-        })
-      });
-      assertCondition(verifyResponse.status === 200, `Expected 200 but received ${verifyResponse.status}`);
-      assertCondition(verifyResponse.data && verifyResponse.data.valid === true, 'Expected payment verification to succeed');
-    });
-
-    await runTest('POST /payments/phonepe/create-order', async () => {
-      const response = await request(baseUrl, '/payments/phonepe/create-order', {
-        method: 'POST',
         body: JSON.stringify({ orderId: createdOrder.id, amount: 50 })
       });
       assertCondition(response.status === 200, `Expected 200 but received ${response.status}`);
@@ -173,8 +146,8 @@ async function runTests() {
       assertCondition(response.data.redirectUrl, 'Expected response to contain redirectUrl');
     });
 
-    await runTest('POST /payments/phonepe/verify', async () => {
-      const response = await request(baseUrl, '/payments/phonepe/verify', {
+    await runTest('POST /payments/verify', async () => {
+      const response = await request(baseUrl, '/payments/verify', {
         method: 'POST',
         body: JSON.stringify({ orderId: createdOrder.id, isMock: true })
       });
