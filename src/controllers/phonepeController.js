@@ -3,7 +3,7 @@ const { getOrderById, updateOrder } = require('../models/Order');
 
 // PhonePe Config
 const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || 'M222AV357KIE0_2608092254';
-const SALT_KEY = process.env.PHONEPE_SALT_KEY || 'MjJkYWM2MmQtYjE2OC00OGRkLTk3YmEtMWZmZmExYjM2Y2Zh';
+const SALT_KEY = process.env.PHONEPE_SALT_KEY || 'b3cf3674-da8c-42c0-ba2b-d75901623c6d';
 const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || '1';
 const ENV = process.env.PHONEPE_ENV || 'UAT'; // 'UAT' or 'PRODUCTION'
 
