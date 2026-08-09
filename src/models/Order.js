@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { getIsConnected } = require('../config/db');
+const { getIsConnected, connectToDatabase } = require('../config/db');
 
 const orderSchema = new mongoose.Schema(
   {

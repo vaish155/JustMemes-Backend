@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { getIsConnected } = require('../config/db');
+const { getIsConnected, connectToDatabase } = require('../config/db');
 
 const availableSizes = ['xs', 's', 'm', 'l', 'xl'];
 
@@ -55,8 +55,6 @@ function normalizeProductSize(size) {
   }
   return [];
 }
-
-const { getIsConnected, connectToDatabase } = require('../config/db');
 
 async function ensureDbConnection() {
   if (!getIsConnected()) {
