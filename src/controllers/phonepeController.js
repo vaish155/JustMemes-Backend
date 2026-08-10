@@ -44,7 +44,8 @@ async function handleCreatePhonePeOrder(req, res, next) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    const merchantTransactionId = `TXN_${order.id}_${Date.now()}`;
+    const cleanOrderId = String(order.id).replace(/[^a-zA-Z0-9]/g, '').slice(-12);
+    const merchantTransactionId = `TXN_${cleanOrderId}_${Date.now()}`;
     const amountInPaise = Math.round((amount || order.total) * 100);
 
     const redirectUrl =
