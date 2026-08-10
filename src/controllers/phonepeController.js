@@ -37,7 +37,7 @@ function calculateXVerify(endpoint, payloadString, saltKey, saltIndex) {
  */
 async function handleCreatePhonePeOrder(req, res, next) {
   try {
-    const { orderId, amount, frontendUrl } = req.body;
+    const { orderId, amount, frontendUrl, vpa, paymentType } = req.body;
     const order = await getOrderById(orderId);
 
     if (!order) {
@@ -81,6 +81,11 @@ async function handleCreatePhonePeOrder(req, res, next) {
       });
     }
 
+    const paymentInstrument =
+      paymentType === 'UPI_COLLECT' && vpa
+        ? { type: 'UPI_COLLECT', vpa: String(vpa).trim() }
+        : { type: 'PAY_PAGE' };
+
     // PhonePe Payload
     const payload = {
       merchantId: config.merchantId,
@@ -91,9 +96,7 @@ async function handleCreatePhonePeOrder(req, res, next) {
       redirectMode: 'REDIRECT',
       callbackUrl,
       mobileNumber: order.contact ? order.contact.replace(/\D/g, '').slice(-10) : '9999999999',
-      paymentInstrument: {
-        type: 'PAY_PAGE',
-      },
+      paymentInstrument,
     };
 
     const base64Payload = Buffer.from(JSON.stringify(payload)).toString('base64');
@@ -136,7 +139,7 @@ async function handleCreatePhonePeOrder(req, res, next) {
       });
     }
 
-    const redirectInfoUrl = data.data?.instrumentResponse?.redirectInfo?.url;
+    const redirectInfoUrl = data.data?.instrumentResponse?.redirectInfo?.url || redirectUrl;
 
     await updateOrder(order.id, {
       phonepeTxnId: merchantTransactionId,
