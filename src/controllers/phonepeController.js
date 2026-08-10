@@ -1,25 +1,35 @@
 const crypto = require('crypto');
 const { getOrderById, updateOrder } = require('../models/Order');
 
-// PhonePe Config
-const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || 'M222AV357KIE0_2608092254';
-const SALT_KEY = process.env.PHONEPE_SALT_KEY || 'b3cf3674-da8c-42c0-ba2b-d75901623c6d';
-const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || '1';
-const ENV = process.env.PHONEPE_ENV || 'UAT'; // 'UAT' or 'PRODUCTION'
+/**
+ * Get PhonePe Environment Config dynamically from process.env
+ */
+function getPhonePeConfig() {
+  const env = process.env.PHONEPE_ENV || 'UAT'; // 'UAT' or 'PRODUCTION'
 
-const HOST_URL =
-  ENV === 'UAT'
-    ? 'https://api-preprod.phonepe.com/apis/pg-sandbox'
-    : 'https://api.phonepe.com/apis/hermes';
+  // Default to official active PhonePe Sandbox credentials in UAT mode if not set in process.env
+  const defaultMerchantId = env === 'UAT' ? 'PGTESTPAYUAT86' : '';
+  const defaultSaltKey = env === 'UAT' ? '96434309-7796-489d-8924-ab56988a6076' : '';
 
+  const merchantId = process.env.PHONEPE_MERCHANT_ID || defaultMerchantId;
+  const saltKey = process.env.PHONEPE_SALT_KEY || defaultSaltKey;
+  const saltIndex = process.env.PHONEPE_SALT_INDEX || '1';
+
+  const hostUrl =
+    env === 'PRODUCTION'
+      ? 'https://api.phonepe.com/apis/hermes'
+      : 'https://api-preprod.phonepe.com/apis/pg-sandbox';
+
+  return { merchantId, saltKey, saltIndex, env, hostUrl };
+}
 
 /**
  * Generate SHA256 Checksum header required by PhonePe API (X-VERIFY)
  */
-function calculateXVerify(endpoint, payloadString) {
-  const stringToHash = payloadString + endpoint + SALT_KEY;
+function calculateXVerify(endpoint, payloadString, saltKey, saltIndex) {
+  const stringToHash = payloadString + endpoint + saltKey;
   const sha256 = crypto.createHash('sha256').update(stringToHash).digest('hex');
-  return `${sha256}###${SALT_INDEX}`;
+  return `${sha256}###${saltIndex}`;
 }
 
 /**
@@ -47,6 +57,8 @@ async function handleCreatePhonePeOrder(req, res, next) {
       process.env.PHONEPE_CALLBACK_URL ||
       `https://justmemes-backend-531422631456.asia-south1.run.app/payments/phonepe/callback`;
 
+    const config = getPhonePeConfig();
+
     // Check if mock mode is explicitly requested
     const isMock = process.env.PHONEPE_MOCK === 'true';
 
@@ -70,7 +82,7 @@ async function handleCreatePhonePeOrder(req, res, next) {
 
     // PhonePe Payload
     const payload = {
-      merchantId: MERCHANT_ID,
+      merchantId: config.merchantId,
       merchantTransactionId,
       merchantUserId: `MUID_${order.customerName ? order.customerName.replace(/\s+/g, '_') : 'USER'}`,
       amount: amountInPaise,
@@ -84,9 +96,9 @@ async function handleCreatePhonePeOrder(req, res, next) {
     };
 
     const base64Payload = Buffer.from(JSON.stringify(payload)).toString('base64');
-    const xVerify = calculateXVerify('/pg/v1/pay', base64Payload);
+    const xVerify = calculateXVerify('/pg/v1/pay', base64Payload, config.saltKey, config.saltIndex);
 
-    const apiResponse = await fetch(`${HOST_URL}/pg/v1/pay`, {
+    const apiResponse = await fetch(`${config.hostUrl}/pg/v1/pay`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -112,7 +124,7 @@ async function handleCreatePhonePeOrder(req, res, next) {
             order.id
           )}&txnId=${encodeURIComponent(merchantTransactionId)}&mock=true`,
           merchantTransactionId,
-          note: 'PhonePe merchant key is pending activation in sandbox. Test payment fallback enabled.',
+          note: 'PhonePe merchant key pending activation in sandbox. Test payment fallback enabled.',
         });
       }
 
@@ -154,6 +166,8 @@ async function handleVerifyPhonePePayment(req, res, next) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
+    const config = getPhonePeConfig();
+
     if (isMock || process.env.PHONEPE_MOCK === 'true') {
       const updatedOrder = await updateOrder(order.id, {
         paymentStatus: 'paid',
@@ -171,15 +185,15 @@ async function handleVerifyPhonePePayment(req, res, next) {
     }
 
     const txnId = merchantTransactionId || order.phonepeTxnId;
-    const endpoint = `/pg/v1/status/${MERCHANT_ID}/${txnId}`;
-    const xVerify = calculateXVerify(endpoint, '');
+    const endpoint = `/pg/v1/status/${config.merchantId}/${txnId}`;
+    const xVerify = calculateXVerify(endpoint, '', config.saltKey, config.saltIndex);
 
-    const apiResponse = await fetch(`${HOST_URL}${endpoint}`, {
+    const apiResponse = await fetch(`${config.hostUrl}${endpoint}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-VERIFY': xVerify,
-        'X-MERCHANT-ID': MERCHANT_ID,
+        'X-MERCHANT-ID': config.merchantId,
       },
     });
 

@@ -125,9 +125,6 @@ const orderSchema = new mongoose.Schema({
   total: { type: Number, required: true },
   paymentStatus: { type: String, default: 'pending' },
   orderStatus: { type: String, default: 'placed' },
-  razorpayOrderId: { type: String, default: '' },
-  razorpayPaymentId: { type: String, default: '' },
-  razorpaySignature: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
