@@ -9,7 +9,7 @@ const products = [
   {
     name: 'The "Three Apples" Tee',
     description: 'Oversized fit with a bold campus-era vibe.',
-    price: 899,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 25,
     size: ['xs', 's', 'm', 'l', 'xl']
@@ -17,7 +17,7 @@ const products = [
   {
     name: 'The "Blank Canvas" Tee',
     description: 'Classic fit for minimalists and late-night thinkers.',
-    price: 899,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 18,
     size: ['s', 'm', 'l', 'xl']
@@ -25,7 +25,7 @@ const products = [
   {
     name: 'The "Low Battery" Tee',
     description: 'Premium heavyweight tee for the tired but stylish.',
-    price: 999,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 12,
     size: ['m', 'l', 'xl']
@@ -33,7 +33,7 @@ const products = [
   {
     name: 'The "Campus Legend" Tee',
     description: 'A clean statement piece for the everyday legend.',
-    price: 949,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 20,
     size: ['xs', 's', 'm']
@@ -41,7 +41,7 @@ const products = [
   {
     name: 'The "No Sleep" Hoodie',
     description: 'Soft hoodie made for long nights and early mornings.',
-    price: 1299,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 10,
     size: ['s', 'm', 'l', 'xl']
@@ -49,7 +49,7 @@ const products = [
   {
     name: 'The "Late Submit" Tee',
     description: 'A funny, wearable reminder of college life.',
-    price: 799,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 30,
     size: ['xs', 's', 'm']
@@ -57,7 +57,7 @@ const products = [
   {
     name: 'The "Main Character" Tee',
     description: 'Bold enough to carry your whole personality.',
-    price: 949,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 16,
     size: ['m', 'l', 'xl']
@@ -65,7 +65,7 @@ const products = [
   {
     name: 'The "Hot Girl Summer" Tee',
     description: 'Simple, stylish, and always ready for the next plan.',
-    price: 899,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 14,
     size: ['xs', 's', 'm', 'l']
@@ -73,7 +73,7 @@ const products = [
   {
     name: 'The "Weekend Mode" Tee',
     description: 'Easygoing comfort with a strong campus aesthetic.',
-    price: 849,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 22,
     size: ['xs', 's', 'm', 'l', 'xl']
@@ -81,7 +81,7 @@ const products = [
   {
     name: 'The "Vibe Check" Tee',
     description: 'A sharp everyday tee that keeps the energy up.',
-    price: 899,
+    price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 17,
     size: ['s', 'm', 'l', 'xl']
@@ -145,11 +145,11 @@ const orders = [
         productName: 'The "Three Apples" Tee',
         size: 'm',
         quantity: 1,
-        price: 899
+        price: 1
       }
     ],
-    subtotal: 899,
-    total: 899,
+    subtotal: 1,
+    total: 1,
     paymentStatus: 'paid',
     orderStatus: 'delivered'
   },
@@ -166,11 +166,11 @@ const orders = [
         productName: 'The "Blank Canvas" Tee',
         size: 'l',
         quantity: 2,
-        price: 899
+        price: 1
       }
     ],
-    subtotal: 1798,
-    total: 1798,
+    subtotal: 2,
+    total: 2,
     paymentStatus: 'pending',
     orderStatus: 'placed'
   }
