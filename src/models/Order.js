@@ -101,8 +101,12 @@ async function listOrders() {
 async function getOrderById(id) {
   await ensureDbConnection();
   if (getIsConnected() && OrderModel) {
-    const order = await OrderModel.findOne({ _id: id }).lean();
-    return order ? sanitizeOrder(order) : null;
+    try {
+      const order = await OrderModel.findOne({ _id: id }).lean();
+      return order ? sanitizeOrder(order) : null;
+    } catch {
+      return null;
+    }
   }
   return inMemoryOrders.find((order) => order.id === id) || null;
 }
