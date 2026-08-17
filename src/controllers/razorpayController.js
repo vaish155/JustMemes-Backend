@@ -26,6 +26,10 @@ async function handleCreateRazorpayOrder(req, res, next) {
 
     const amountInPaise = Math.round((order.total || 0) * 100);
 
+    if (amountInPaise < 100) {
+      return res.status(400).json({ error: 'Order amount must be at least ₹1 (100 paise)' });
+    }
+
     const razorpay = getRazorpayInstance();
     const razorpayOrder = await razorpay.orders.create({
       amount: amountInPaise,
@@ -48,6 +52,9 @@ async function handleCreateRazorpayOrder(req, res, next) {
       order,
     });
   } catch (error) {
+    if (error.statusCode === 401 || (error.message && error.message.includes('auth'))) {
+      return res.status(401).json({ error: 'Razorpay authentication failed — check KEY_ID and KEY_SECRET' });
+    }
     next(error);
   }
 }
@@ -55,6 +62,10 @@ async function handleCreateRazorpayOrder(req, res, next) {
 async function handleVerifyRazorpayPayment(req, res, next) {
   try {
     const { orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
+
+    if (!orderId || !razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+      return res.status(400).json({ error: 'Missing required fields: orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature' });
+    }
     const order = await getOrderById(orderId);
 
     if (!order) {

@@ -93,8 +93,12 @@ async function createProduct(data) {
 async function getProductById(id) {
   await ensureDbConnection();
   if (getIsConnected() && ProductModel) {
-    const product = await ProductModel.findOne({ _id: id }).lean();
-    return product ? sanitizeProduct(product) : null;
+    try {
+      const product = await ProductModel.findOne({ _id: id }).lean();
+      return product ? sanitizeProduct(product) : null;
+    } catch {
+      return null;
+    }
   }
   return inMemoryProducts.find((p) => String(p.id) === String(id)) || null;
 }
