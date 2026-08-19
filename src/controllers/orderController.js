@@ -3,13 +3,12 @@ const { createOrder, listOrders, getOrderById } = require('../models/Order');
 
 async function handleCheckout(req, res, next) {
   try {
-    const { customerName, contact, email, address, roomNumber, hostelName, items } = req.body;
+    const { customerName, contact, email, roomNumber, hostelName, items } = req.body;
 
     if (
       !customerName ||
       !contact ||
       !email ||
-      !address ||
       !roomNumber ||
       !hostelName ||
       !Array.isArray(items) ||
@@ -59,7 +58,7 @@ async function handleCheckout(req, res, next) {
       customerName,
       contact,
       email,
-      address,
+      address: 'IISc',
       roomNumber,
       hostelName,
       items: productDetails,
