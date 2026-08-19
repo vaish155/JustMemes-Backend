@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { getOrderById, updateOrder } = require('../models/Order');
+const { sendOrderConfirmation } = require('../services/mailer');
 
 /**
  * Get PhonePe Environment Config dynamically from process.env
@@ -180,6 +181,8 @@ async function handleVerifyPhonePePayment(req, res, next) {
         phonepeTxnId: merchantTransactionId || order.phonepeTxnId,
       });
 
+      sendOrderConfirmation(updatedOrder);
+
       return res.json({
         success: true,
         valid: true,
@@ -209,6 +212,10 @@ async function handleVerifyPhonePePayment(req, res, next) {
       orderStatus: isPaymentSuccessful ? 'paid' : 'failed',
       phonepeResponseCode: data.code,
     });
+
+    if (isPaymentSuccessful) {
+      sendOrderConfirmation(updatedOrder);
+    }
 
     res.json({
       success: isPaymentSuccessful,

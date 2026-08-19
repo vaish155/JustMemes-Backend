@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const Razorpay = require('razorpay');
 const { getOrderById, updateOrder } = require('../models/Order');
+const { sendOrderConfirmation } = require('../services/mailer');
 
 function getRazorpayInstance() {
   const keyId = process.env.RAZORPAY_KEY_ID;
@@ -102,6 +103,8 @@ async function handleVerifyRazorpayPayment(req, res, next) {
       razorpayPaymentId,
       razorpayOrderId,
     });
+
+    sendOrderConfirmation(updatedOrder);
 
     res.json({
       success: true,
