@@ -41,6 +41,9 @@ function buildOrderConfirmHTML(order) {
     )
     .join('');
 
+  const frontendUrl = process.env.FRONTEND_URL || 'https://memetheory.in';
+  const trackUrl = `${frontendUrl}/trackorder?ref=${encodeURIComponent(order.id)}`;
+
   return `
     <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#222;">
       <div style="background:#111;color:#fff;padding:20px;text-align:center;">
@@ -67,8 +70,14 @@ function buildOrderConfirmHTML(order) {
         <p style="color:#555;font-size:13px;margin-top:20px;">
           Delivery: ${order.hostelName}, Room ${order.roomNumber}, ${order.address}
         </p>
-        <p style="color:#888;font-size:12px;">
-          For any queries, reply to this email or contact us at support@justmemes.in
+        <p style="color:#555;font-size:13px;margin-top:4px;">
+          Estimated delivery: 7-10 business days from order date.
+        </p>
+        <div style="text-align:center;margin-top:24px;">
+          <a href="${trackUrl}" style="display:inline-block;background:#111;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Track Your Order</a>
+        </div>
+        <p style="color:#888;font-size:12px;margin-top:24px;">
+          For any queries, reply to this email or contact us at support@memetheory.in
         </p>
       </div>
     </div>
@@ -83,6 +92,9 @@ function buildOrderConfirmText(order) {
       )}`
   );
 
+  const frontendUrl = process.env.FRONTEND_URL || 'https://memetheory.in';
+  const trackUrl = `${frontendUrl}/trackorder?ref=${encodeURIComponent(order.id)}`;
+
   return [
     `Hi ${order.customerName},`,
     '',
@@ -95,6 +107,11 @@ function buildOrderConfirmText(order) {
     `Total: ${formatINR(order.total)}`,
     '',
     `Delivery: ${order.hostelName}, Room ${order.roomNumber}, ${order.address}`,
+    'Estimated delivery: 7-10 business days from order date.',
+    '',
+    `Track your order: ${trackUrl}`,
+    '',
+    'For any queries, reply to this email or contact us at support@memetheory.in',
   ].join('\n');
 }
 
@@ -105,7 +122,7 @@ async function sendOrderConfirmation(order) {
     return false;
   }
 
-  const from = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+  const from = process.env.EMAIL_FROM || 'support@memetheory.in';
 
   try {
     await client.emails.send({

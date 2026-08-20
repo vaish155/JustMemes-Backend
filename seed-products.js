@@ -3,8 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const availableSizes = ['xs', 's', 'm', 'l', 'xl'];
-
 const products = [
   {
     name: 'The "Three Apples" Tee',
@@ -92,15 +90,12 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, default: '' },
   price: { type: Number, required: true },
+  comparePrice: { type: Number, default: 0 },
   imageUrl: { type: String, default: '' },
   stock: { type: Number, default: 0 },
   size: {
     type: [String],
-    required: true,
-    validate: {
-      validator: (value) => value.every((entry) => availableSizes.includes(entry)),
-      message: 'Each size must be one of xs, s, m, l, xl.'
-    }
+    required: true
   },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });

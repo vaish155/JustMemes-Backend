@@ -1,22 +1,17 @@
 const mongoose = require('mongoose');
 const { getIsConnected, connectToDatabase } = require('../config/db');
 
-const availableSizes = ['xs', 's', 'm', 'l', 'xl'];
-
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String, default: '' },
     price: { type: Number, required: true },
+    comparePrice: { type: Number, default: 0 },
     imageUrl: { type: String, default: '' },
     stock: { type: Number, default: 0 },
     size: {
       type: [String],
       required: true,
-      validate: {
-        validator: (value) => value.every((entry) => availableSizes.includes(entry)),
-        message: 'Each size must be one of xs, s, m, l, xl.',
-      },
     },
     createdAt: { type: Date, default: Date.now },
   },
@@ -39,6 +34,7 @@ function sanitizeProduct(product) {
     name: product.name,
     description: product.description,
     price: product.price,
+    comparePrice: product.comparePrice || 0,
     imageUrl: product.imageUrl,
     stock: product.stock !== undefined ? product.stock : 0,
     size: Array.isArray(product.size) ? product.size : [product.size].filter(Boolean),
@@ -133,7 +129,6 @@ async function deleteProduct(id) {
 
 module.exports = {
   ProductModel,
-  availableSizes,
   sanitizeProduct,
   normalizeProductSize,
   listProducts,
