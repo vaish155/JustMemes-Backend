@@ -1,30 +1,23 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-let transporter = null;
+let resend = null;
 
-function getTransporter() {
-  if (transporter) {
-    return transporter;
+function getClient() {
+  if (resend) {
+    return resend;
   }
 
-  const user = process.env.EMAIL_USER;
-  const pass = process.env.EMAIL_PASS;
+  const apiKey = process.env.RESEND_API_KEY;
 
-  if (!user || !pass) {
+  if (!apiKey) {
     console.warn(
-      '[mailer] EMAIL_USER / EMAIL_PASS not configured — skipping real email delivery.'
+      '[mailer] RESEND_API_KEY not configured — skipping real email delivery.'
     );
     return null;
   }
 
-  transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: { user, pass },
-  });
-
-  return transporter;
+  resend = new Resend(apiKey);
+  return resend;
 }
 
 function formatINR(amount) {
@@ -106,17 +99,17 @@ function buildOrderConfirmText(order) {
 }
 
 async function sendOrderConfirmation(order) {
-  const t = getTransporter();
-  if (!t || !order || !order.email) {
+  const client = getClient();
+  if (!client || !order || !order.email) {
     console.warn(`[mailer] Skipping confirmation email for order ${order?.id || 'unknown'}`);
     return false;
   }
 
-  const from = process.env.EMAIL_USER;
+  const from = process.env.EMAIL_FROM || 'onboarding@resend.dev';
 
   try {
-    await t.sendMail({
-      from: `"Meme Theory" <${from}>`,
+    await client.emails.send({
+      from: `Meme Theory <${from}>`,
       to: order.email,
       subject: `Order Confirmed — ${order.id} | Meme Theory`,
       text: buildOrderConfirmText(order),

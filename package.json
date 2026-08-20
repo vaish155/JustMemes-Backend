@@ -13,8 +13,8 @@
     "dotenv": "^16.4.2",
     "express": "^4.19.0",
     "mongoose": "^8.5.0",
-    "nodemailer": "^9.0.5",
-    "razorpay": "^2.9.8"
+    "razorpay": "^2.9.8",
+    "resend": "^4.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
