@@ -11,7 +11,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 25,
     size: ['xs', 's', 'm', 'l', 'xl'],
-    colors: ['black', 'white', 'olive']
+    colors: ['black', 'white', 'olive'],
+    images: ['https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSPJ3GpRZUHMntlj08qV7OirhV3o0qtr86pPA6FtxWokK3OzARtQ541ak_WtOg_8SzbwyUJR3I_8mpOLKY', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwV_0PAr5CVz3yPdtgoRlKY5NOCrPHEV9--U4NppM1pyVTiJnp2mLVnZV2z7fqy5JxDrdtYJJIYr73x38', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSnmPe9QlVubleN-A2c7gCsYh_pFzR3FYlT_6_WmdC8bwTnBBQG7QPNrGrvi2rpAK8X2y1BuViMZE4c_sE']
   },
   {
     name: 'The "Blank Canvas" Tee',
@@ -20,7 +21,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 18,
     size: ['s', 'm', 'l', 'xl'],
-    colors: ['white', 'beige']
+    colors: ['white', 'beige'],
+    images: ['https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwV_0PAr5CVz3yPdtgoRlKY5NOCrPHEV9--U4NppM1pyVTiJnp2mLVnZV2z7fqy5JxDrdtYJJIYr73x38', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSnmPe9QlVubleN-A2c7gCsYh_pFzR3FYlT_6_WmdC8bwTnBBQG7QPNrGrvi2rpAK8X2y1BuViMZE4c_sE', 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTBqWL8uxunm6-29eiP7wQiTx3KZQ463TfloPrIgS6PZ1PO7ILvrg_O-AkzbxQtTHqazCOcsY7qSTOuZgk']
   },
   {
     name: 'The "Low Battery" Tee',
@@ -29,7 +31,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 12,
     size: ['m', 'l', 'xl'],
-    colors: ['navy', 'grey']
+    colors: ['navy', 'grey'],
+    images: ['https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSnmPe9QlVubleN-A2c7gCsYh_pFzR3FYlT_6_WmdC8bwTnBBQG7QPNrGrvi2rpAK8X2y1BuViMZE4c_sE', 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTBqWL8uxunm6-29eiP7wQiTx3KZQ463TfloPrIgS6PZ1PO7ILvrg_O-AkzbxQtTHqazCOcsY7qSTOuZgk', 'https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS85wRqKd6Ykrt_IHmsyu0ONaopIoDAIko02ALT5SLFOP7glv8lLHEzLavGyvFtzYgcMT1B8a_6XsjGxco']
   },
   {
     name: 'The "Campus Legend" Tee',
@@ -38,7 +41,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 20,
     size: ['xs', 's', 'm'],
-    colors: ['black', 'beige']
+    colors: ['black', 'beige'],
+    images: ['https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTBqWL8uxunm6-29eiP7wQiTx3KZQ463TfloPrIgS6PZ1PO7ILvrg_O-AkzbxQtTHqazCOcsY7qSTOuZgk', 'https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS85wRqKd6Ykrt_IHmsyu0ONaopIoDAIko02ALT5SLFOP7glv8lLHEzLavGyvFtzYgcMT1B8a_6XsjGxco', 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSPJ3GpRZUHMntlj08qV7OirhV3o0qtr86pPA6FtxWokK3OzARtQ541ak_WtOg_8SzbwyUJR3I_8mpOLKY']
   },
   {
     name: 'The "No Sleep" Hoodie',
@@ -47,7 +51,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 10,
     size: ['s', 'm', 'l', 'xl'],
-    colors: ['black', 'maroon']
+    colors: ['black', 'maroon'],
+    images: ['https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS85wRqKd6Ykrt_IHmsyu0ONaopIoDAIko02ALT5SLFOP7glv8lLHEzLavGyvFtzYgcMT1B8a_6XsjGxco', 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSPJ3GpRZUHMntlj08qV7OirhV3o0qtr86pPA6FtxWokK3OzARtQ541ak_WtOg_8SzbwyUJR3I_8mpOLKY', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwV_0PAr5CVz3yPdtgoRlKY5NOCrPHEV9--U4NppM1pyVTiJnp2mLVnZV2z7fqy5JxDrdtYJJIYr73x38']
   },
   {
     name: 'The "Late Submit" Tee',
@@ -56,7 +61,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 30,
     size: ['xs', 's', 'm'],
-    colors: ['white', 'grey', 'navy']
+    colors: ['white', 'grey', 'navy'],
+    images: ['https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSPJ3GpRZUHMntlj08qV7OirhV3o0qtr86pPA6FtxWokK3OzARtQ541ak_WtOg_8SzbwyUJR3I_8mpOLKY', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwV_0PAr5CVz3yPdtgoRlKY5NOCrPHEV9--U4NppM1pyVTiJnp2mLVnZV2z7fqy5JxDrdtYJJIYr73x38', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSnmPe9QlVubleN-A2c7gCsYh_pFzR3FYlT_6_WmdC8bwTnBBQG7QPNrGrvi2rpAK8X2y1BuViMZE4c_sE']
   },
   {
     name: 'The "Main Character" Tee',
@@ -65,7 +71,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 16,
     size: ['m', 'l', 'xl'],
-    colors: ['black', 'olive']
+    colors: ['black', 'olive'],
+    images: ['https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwV_0PAr5CVz3yPdtgoRlKY5NOCrPHEV9--U4NppM1pyVTiJnp2mLVnZV2z7fqy5JxDrdtYJJIYr73x38', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSnmPe9QlVubleN-A2c7gCsYh_pFzR3FYlT_6_WmdC8bwTnBBQG7QPNrGrvi2rpAK8X2y1BuViMZE4c_sE', 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTBqWL8uxunm6-29eiP7wQiTx3KZQ463TfloPrIgS6PZ1PO7ILvrg_O-AkzbxQtTHqazCOcsY7qSTOuZgk']
   },
   {
     name: 'The "Hot Girl Summer" Tee',
@@ -74,7 +81,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 14,
     size: ['xs', 's', 'm', 'l'],
-    colors: ['white', 'maroon']
+    colors: ['white', 'maroon'],
+    images: ['https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSnmPe9QlVubleN-A2c7gCsYh_pFzR3FYlT_6_WmdC8bwTnBBQG7QPNrGrvi2rpAK8X2y1BuViMZE4c_sE', 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTBqWL8uxunm6-29eiP7wQiTx3KZQ463TfloPrIgS6PZ1PO7ILvrg_O-AkzbxQtTHqazCOcsY7qSTOuZgk', 'https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS85wRqKd6Ykrt_IHmsyu0ONaopIoDAIko02ALT5SLFOP7glv8lLHEzLavGyvFtzYgcMT1B8a_6XsjGxco']
   },
   {
     name: 'The "Weekend Mode" Tee',
@@ -83,7 +91,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 22,
     size: ['xs', 's', 'm', 'l', 'xl'],
-    colors: ['olive', 'beige']
+    colors: ['olive', 'beige'],
+    images: ['https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTBqWL8uxunm6-29eiP7wQiTx3KZQ463TfloPrIgS6PZ1PO7ILvrg_O-AkzbxQtTHqazCOcsY7qSTOuZgk', 'https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS85wRqKd6Ykrt_IHmsyu0ONaopIoDAIko02ALT5SLFOP7glv8lLHEzLavGyvFtzYgcMT1B8a_6XsjGxco', 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSPJ3GpRZUHMntlj08qV7OirhV3o0qtr86pPA6FtxWokK3OzARtQ541ak_WtOg_8SzbwyUJR3I_8mpOLKY']
   },
   {
     name: 'The "Vibe Check" Tee',
@@ -92,7 +101,8 @@ const products = [
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 17,
     size: ['s', 'm', 'l', 'xl'],
-    colors: ['navy', 'black']
+    colors: ['navy', 'black'],
+    images: ['https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS85wRqKd6Ykrt_IHmsyu0ONaopIoDAIko02ALT5SLFOP7glv8lLHEzLavGyvFtzYgcMT1B8a_6XsjGxco', 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSPJ3GpRZUHMntlj08qV7OirhV3o0qtr86pPA6FtxWokK3OzARtQ541ak_WtOg_8SzbwyUJR3I_8mpOLKY', 'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwV_0PAr5CVz3yPdtgoRlKY5NOCrPHEV9--U4NppM1pyVTiJnp2mLVnZV2z7fqy5JxDrdtYJJIYr73x38']
   }
 ];
 
@@ -102,6 +112,7 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   comparePrice: { type: Number, default: 0 },
   imageUrl: { type: String, default: '' },
+  images: { type: [String], default: [] },
   stock: { type: Number, default: 0 },
   size: {
     type: [String],

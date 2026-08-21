@@ -8,6 +8,10 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     comparePrice: { type: Number, default: 0 },
     imageUrl: { type: String, default: '' },
+    images: {
+      type: [String],
+      default: [],
+    },
     stock: { type: Number, default: 0 },
     size: {
       type: [String],
@@ -33,13 +37,15 @@ let inMemoryProducts = [];
 let productCounter = 1;
 
 function sanitizeProduct(product) {
+  const imageUrl = product.imageUrl || '';
   return {
     id: product.id || product._id?.toString(),
     name: product.name,
     description: product.description,
     price: product.price,
     comparePrice: product.comparePrice || 0,
-    imageUrl: product.imageUrl,
+    imageUrl,
+    images: normalizeProductImages(product.images, imageUrl),
     stock: product.stock !== undefined ? product.stock : 0,
     size: Array.isArray(product.size) ? product.size : [product.size].filter(Boolean),
     colors: normalizeProductColors(product.colors),
@@ -68,6 +74,20 @@ function normalizeProductColors(colors) {
   return ['black'];
 }
 
+function normalizeProductImages(images, imageUrl) {
+  let list = [];
+  if (Array.isArray(images)) {
+    list = images.map((i) => String(i || '').trim()).filter(Boolean);
+  } else if (typeof images === 'string' && images.trim()) {
+    list = [images.trim()];
+  }
+  const primary = String(imageUrl || '').trim();
+  if (primary && !list.includes(primary)) {
+    list.unshift(primary);
+  }
+  return list;
+}
+
 async function ensureDbConnection() {
   if (!getIsConnected()) {
     await connectToDatabase();
@@ -89,6 +109,7 @@ async function createProduct(data) {
     ...data,
     size: normalizeProductSize(data.size),
     colors: normalizeProductColors(data.colors),
+    images: normalizeProductImages(data.images, data.imageUrl),
   };
   if (getIsConnected() && ProductModel) {
     const created = await ProductModel.create(payload);
@@ -125,6 +146,9 @@ async function updateProduct(id, data) {
   if (data.colors !== undefined) {
     payload.colors = normalizeProductColors(data.colors);
   }
+  if (data.images !== undefined) {
+    payload.images = normalizeProductImages(data.images, data.imageUrl);
+  }
   if (getIsConnected() && ProductModel) {
     const product = await ProductModel.findByIdAndUpdate(id, payload, { new: true }).lean();
     return product ? sanitizeProduct(product) : null;
@@ -152,6 +176,7 @@ module.exports = {
   sanitizeProduct,
   normalizeProductSize,
   normalizeProductColors,
+  normalizeProductImages,
   listProducts,
   createProduct,
   getProductById,
