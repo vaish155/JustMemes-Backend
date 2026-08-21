@@ -42,11 +42,26 @@ async function handleCheckout(req, res, next) {
         });
       }
 
+      const availableColors = Array.isArray(product.colors)
+        ? product.colors.filter(Boolean)
+        : [];
+      const selectedColor =
+        typeof item.color === 'string' && item.color
+          ? item.color.toLowerCase().trim()
+          : availableColors[0] || 'black';
+
+      if (availableColors.length > 0 && !availableColors.includes(selectedColor)) {
+        return res.status(400).json({
+          error: `Selected color ${item.color} is not available for ${product.name}`,
+        });
+      }
+
       subtotal += product.price * item.quantity;
       productDetails.push({
         productId: product.id,
         productName: product.name,
         size: selectedSize,
+        color: selectedColor,
         quantity: item.quantity,
         price: product.price,
       });

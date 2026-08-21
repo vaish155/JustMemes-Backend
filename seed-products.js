@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -10,7 +10,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 25,
-    size: ['xs', 's', 'm', 'l', 'xl']
+    size: ['xs', 's', 'm', 'l', 'xl'],
+    colors: ['black', 'white', 'olive']
   },
   {
     name: 'The "Blank Canvas" Tee',
@@ -18,7 +19,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 18,
-    size: ['s', 'm', 'l', 'xl']
+    size: ['s', 'm', 'l', 'xl'],
+    colors: ['white', 'beige']
   },
   {
     name: 'The "Low Battery" Tee',
@@ -26,7 +28,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 12,
-    size: ['m', 'l', 'xl']
+    size: ['m', 'l', 'xl'],
+    colors: ['navy', 'grey']
   },
   {
     name: 'The "Campus Legend" Tee',
@@ -34,7 +37,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 20,
-    size: ['xs', 's', 'm']
+    size: ['xs', 's', 'm'],
+    colors: ['black', 'beige']
   },
   {
     name: 'The "No Sleep" Hoodie',
@@ -42,7 +46,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 10,
-    size: ['s', 'm', 'l', 'xl']
+    size: ['s', 'm', 'l', 'xl'],
+    colors: ['black', 'maroon']
   },
   {
     name: 'The "Late Submit" Tee',
@@ -50,7 +55,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 30,
-    size: ['xs', 's', 'm']
+    size: ['xs', 's', 'm'],
+    colors: ['white', 'grey', 'navy']
   },
   {
     name: 'The "Main Character" Tee',
@@ -58,7 +64,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 16,
-    size: ['m', 'l', 'xl']
+    size: ['m', 'l', 'xl'],
+    colors: ['black', 'olive']
   },
   {
     name: 'The "Hot Girl Summer" Tee',
@@ -66,7 +73,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 14,
-    size: ['xs', 's', 'm', 'l']
+    size: ['xs', 's', 'm', 'l'],
+    colors: ['white', 'maroon']
   },
   {
     name: 'The "Weekend Mode" Tee',
@@ -74,7 +82,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 22,
-    size: ['xs', 's', 'm', 'l', 'xl']
+    size: ['xs', 's', 'm', 'l', 'xl'],
+    colors: ['olive', 'beige']
   },
   {
     name: 'The "Vibe Check" Tee',
@@ -82,7 +91,8 @@ const products = [
     price: 1,
     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Vw02bkwgzPdmBr_ir1F3mAuYoyzZdrvhlVOwYGLNazKAL3Npx-kW1dcH&s=10',
     stock: 17,
-    size: ['s', 'm', 'l', 'xl']
+    size: ['s', 'm', 'l', 'xl'],
+    colors: ['navy', 'black']
   }
 ];
 
@@ -97,6 +107,10 @@ const productSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
+  colors: {
+    type: [String],
+    default: ['black']
+  },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
@@ -108,13 +122,14 @@ const orderSchema = new mongoose.Schema({
   roomNumber: { type: String, required: true },
   hostelName: { type: String, required: true },
   items: [
-    {
-      productId: { type: String, required: true },
-      productName: { type: String, required: true },
-      size: { type: String, required: true },
-      quantity: { type: Number, required: true },
-      price: { type: Number, required: true }
-    }
+      {
+        productId: { type: String, required: true },
+        productName: { type: String, required: true },
+        size: { type: String, required: true },
+        color: { type: String, default: '' },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true }
+      }
   ],
   subtotal: { type: Number, required: true },
   total: { type: Number, required: true },
@@ -139,6 +154,7 @@ const orders = [
         productId: 'placeholder-product-id',
         productName: 'The "Three Apples" Tee',
         size: 'm',
+        color: 'black',
         quantity: 1,
         price: 1
       }
@@ -160,6 +176,7 @@ const orders = [
         productId: 'placeholder-product-id',
         productName: 'The "Blank Canvas" Tee',
         size: 'l',
+        color: 'white',
         quantity: 2,
         price: 1
       }

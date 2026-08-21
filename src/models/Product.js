@@ -13,6 +13,10 @@ const productSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
+    colors: {
+      type: [String],
+      default: ['black'],
+    },
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
@@ -38,6 +42,7 @@ function sanitizeProduct(product) {
     imageUrl: product.imageUrl,
     stock: product.stock !== undefined ? product.stock : 0,
     size: Array.isArray(product.size) ? product.size : [product.size].filter(Boolean),
+    colors: normalizeProductColors(product.colors),
     createdAt: product.createdAt,
   };
 }
@@ -50,6 +55,17 @@ function normalizeProductSize(size) {
     return [size];
   }
   return [];
+}
+
+function normalizeProductColors(colors) {
+  if (Array.isArray(colors)) {
+    const cleaned = colors.filter(Boolean).map((c) => String(c).toLowerCase().trim());
+    return cleaned.length ? cleaned : ['black'];
+  }
+  if (typeof colors === 'string' && colors) {
+    return [colors.toLowerCase().trim()];
+  }
+  return ['black'];
 }
 
 async function ensureDbConnection() {
@@ -72,6 +88,7 @@ async function createProduct(data) {
   const payload = {
     ...data,
     size: normalizeProductSize(data.size),
+    colors: normalizeProductColors(data.colors),
   };
   if (getIsConnected() && ProductModel) {
     const created = await ProductModel.create(payload);
@@ -105,6 +122,9 @@ async function updateProduct(id, data) {
   if (data.size !== undefined) {
     payload.size = normalizeProductSize(data.size);
   }
+  if (data.colors !== undefined) {
+    payload.colors = normalizeProductColors(data.colors);
+  }
   if (getIsConnected() && ProductModel) {
     const product = await ProductModel.findByIdAndUpdate(id, payload, { new: true }).lean();
     return product ? sanitizeProduct(product) : null;
@@ -131,6 +151,7 @@ module.exports = {
   ProductModel,
   sanitizeProduct,
   normalizeProductSize,
+  normalizeProductColors,
   listProducts,
   createProduct,
   getProductById,
